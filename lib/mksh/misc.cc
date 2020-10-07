@@ -40,7 +40,7 @@
 /*
  * Included files
  */
-#include <bsd/bsd.h>		/* bsd_signal() */
+#include <bsd/bsd.h>		/* signal() */
 #include <mksh/i18n.h>		/* get_char_semantics_value() */
 #include <mksh/misc.h>
 #include <stdarg.h>		/* va_list, va_start(), va_end() */
@@ -273,30 +273,30 @@ enable_interrupt(register void (*handler) (int))
 {
 	if (sigivalue != SIG_IGN) {
 #ifdef __sun
-		(void) bsd_signal(SIGINT, (SIG_PF) handler);
+		(void) signal(SIGINT, (SIG_PF) handler);
 #else
-		(void) bsd_signal(SIGINT, handler);
+		(void) signal(SIGINT, handler);
 #endif
 	}
 	if (sigqvalue != SIG_IGN) {
 #ifdef __sun
-		(void) bsd_signal(SIGQUIT, (SIG_PF) handler);
+		(void) signal(SIGQUIT, (SIG_PF) handler);
 #else
-		(void) bsd_signal(SIGQUIT, handler);
+		(void) signal(SIGQUIT, handler);
 #endif
 	}
 	if (sigtvalue != SIG_IGN) {
 #ifdef __sun
-		(void) bsd_signal(SIGTERM, (SIG_PF) handler);
+		(void) signal(SIGTERM, (SIG_PF) handler);
 #else
-		(void) bsd_signal(SIGTERM, handler);
+		(void) signal(SIGTERM, handler);
 #endif
 	}
 	if (sighvalue != SIG_IGN) {
 #ifdef __sun
-		(void) bsd_signal(SIGHUP, (SIG_PF) handler);
+		(void) signal(SIGHUP, (SIG_PF) handler);
 #else
-		(void) bsd_signal(SIGHUP, handler);
+		(void) signal(SIGHUP, handler);
 #endif
 
 	}
@@ -858,10 +858,10 @@ handle_interrupt_mksh(int)
 void
 setup_interrupt(register void (*handler) (int))
 {
-	sigivalue = bsd_signal(SIGINT, SIG_IGN);
-	sigqvalue = bsd_signal(SIGQUIT, SIG_IGN);
-	sigtvalue = bsd_signal(SIGTERM, SIG_IGN);
-	sighvalue = bsd_signal(SIGHUP, SIG_IGN);
+	sigivalue = signal(SIGINT, SIG_IGN);
+	sigqvalue = signal(SIGQUIT, SIG_IGN);
+	sigtvalue = signal(SIGTERM, SIG_IGN);
+	sighvalue = signal(SIGHUP, SIG_IGN);
 	enable_interrupt(handler);
 }
 

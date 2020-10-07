@@ -32,7 +32,7 @@
 /*
  * Included files
  */
-#include <bsd/bsd.h>		/* bsd_signal() */
+#include <bsd/bsd.h>		/* signal() */
 
 
 #include <locale.h>		/* setlocale() */
@@ -207,7 +207,7 @@ main(int argc, char *argv[])
 	struct stat		out_stat, err_stat;
 	hostid = gethostid();
 #ifdef __sun
-	bsd_signals();
+	signals();
 #else
 // XXX necessary on linux?
 #endif
@@ -489,9 +489,9 @@ main(int argc, char *argv[])
  *	Enable interrupt handler for alarms
  */
 #ifdef __sun
-        (void) bsd_signal(SIGALRM, (SIG_PF)doalarm);
+        (void) signal(SIGALRM, (SIG_PF)doalarm);
 #else
-        (void) bsd_signal(SIGALRM, doalarm);
+        (void) signal(SIGALRM, doalarm);
 #endif
 
 /*
@@ -768,7 +768,7 @@ handle_interrupt(int)
 		}
 	}
 	if (getpid() == getpgrp()) {
-		bsd_signal(SIGTERM, SIG_IGN);
+		signal(SIGTERM, SIG_IGN);
 		kill (-getpid(), SIGTERM);
 	}
 	/* Clean up all parallel children already finished */

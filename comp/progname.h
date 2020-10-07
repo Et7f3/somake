@@ -5,7 +5,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-const char *getprogname();
+const char *getprogname(void);
 #ifdef __cplusplus
 }
 #endif
