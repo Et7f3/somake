@@ -36,19 +36,24 @@ OUTPUT_OPTION=
 #	C language section.
 CC=cc
 CFLAGS=
-CPPFLAGS=
+CPPFLAGS=-MMD
 LINT=lint
 LINTFLAGS=
 COMPILE.c=$(CC) $(CFLAGS) $(CPPFLAGS) -c
 LINK.c=$(CC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) 
+LINK.o = $(CC) $(LDFLAGS)
 LINT.c=$(LINT) $(LINTFLAGS) $(CPPFLAGS) 
 .c:
 	$(LINK.c) -o $@ $< $(LDLIBS)
+%: %.o
+#  recette à exécuter (commande interne) :
+	$(LINK.o) $^ $(LOADLIBES) $(LDLIBS) -o $@
+
 .c~:
 	$(GET) $(GFLAGS) -p $< > $*.c
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $*.c
-.c.o:
-	$(COMPILE.c) $(OUTPUT_OPTION) $<
+%.o: %.c %.d
+	$(COMPILE.c) $(OUTPUT_OPTION) $< -o $@
 .c~.o:
 	$(GET) $(GFLAGS) -p $< > $*.c
 	$(CC) $(CFLAGS) -c  $*.c
@@ -477,7 +482,7 @@ LDLIBS=
 MAKE=make
 RM=rm -f
 AR=ar
-ARFLAGS=rv
+ARFLAGS=rcs
 GET=get
 GFLAGS=
 

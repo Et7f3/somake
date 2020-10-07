@@ -1279,7 +1279,6 @@ case scan_name_state:
 				if(svr4) {
 				  fatal_reader(gettext("syntax error"));
 				}
-                                printf("%.*ls\n", wcscspn(source_p, L"\n"), source_p);
 				separator = conditional_seen;
 				source_p++;
 				current_names = &depes;
@@ -1290,14 +1289,9 @@ case scan_name_state:
 				break;
 			default:
                                 {
-                                /*puts("begin");
-                                wcscspn(source_p2, L"\n");
-                                printf("\x1b[32mune ligne\x1B[0m: %.*ls\n", wcscspn(source_p, L"\n"), source_p);
-                                puts("end");*/
                                 auto next = my_wcsnstr(source_p, L"+=", wcscspn(source_p, L"\n"));
                                 if (next != -1)
                                 {
-                                    printf("\"%.*ls\"\n", next, source_p);
 				    separator = conditional_seen;
 				    current_names = &depes;
 				    GOTO_STATE(scan_name_state);
