@@ -9,6 +9,7 @@ check_function_exists(wcsdup HAVE_WCSDUP)
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
   find_package(PkgConfig)
   pkg_search_module(BSD libbsd)
+  pkg_search_module(TIRPC libtirpc)
   if (BSD_LIBRARIES)
     set(HAVE_CLOSEFROM 1)
   endif()
@@ -23,6 +24,14 @@ if(CMAKE_SYSTEM_NAME STREQUAL "SunOS")
   # prefer the OpenCSW libintl over the one from /usr/lib
   find_library(INTL_LIB NAMES intl HINTS /opt/csw/lib)
 endif()
+
+# lib/mksh/dosys.cc:545:20: attention: conversion invalide de « wchar_t » vers « wchar_t* » [-fpermissive]
+#   545 |  command->text.p = (wchar_t) nul_char;
+#       |                    ^~~~~~~~~~~~~~~~~~
+#       |                    |
+#       |                    wchar_t
+set_source_files_properties(lib/mksh/dosys.cc PROPERTIES COMPILE_FLAGS -fpermissive)
+
 
 add_library(mksh STATIC
   lib/mksh/dosys.cc lib/mksh/globals.cc lib/mksh/i18n.cc lib/mksh/macro.cc
@@ -55,10 +64,11 @@ set_property(TARGET ${PROJECT_NAME} mksh vroot PROPERTY INCLUDE_DIRECTORIES
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_BINARY_DIR}
   ${BSD_INCLUDE_DIRS}
+  ${TIRPC_INCLUDE_DIRS}
 )
 
 target_link_libraries(${PROJECT_NAME}
-  mksh vroot pthread ${BSD_LIBRARIES} ${NSL_LIB} ${INTL_LIB}
+  mksh vroot pthread ${TIRPC_LIBRARIES} ${BSD_LIBRARIES} ${NSL_LIB} ${INTL_LIB}
 )
 
 # default install prefix is /usr/local
